@@ -117,6 +117,15 @@ async function run() {
       core.setFailed(error.message);
     }
 
+    // send images to LayoutDiff
+    try {
+      const screenshotsPath = core.getInput('screenshotsPath', { required: true });
+      const projectToken = core.getInput('projectToken', { required: true });
+      exec.exec(`for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/$1; done`)
+    } catch (error) {
+      core.setFailed(error.message)
+    }
+
     // finally kill the emulator
     await killEmulator();
   } catch (error) {
