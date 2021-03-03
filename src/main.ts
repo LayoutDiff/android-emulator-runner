@@ -119,15 +119,17 @@ async function run() {
 
     // send images to LayoutDiff
     try {
-      const screenshotsPath = core.getInput('screenshotsPath', { required: true });
-      const projectToken = core.getInput('projectToken', { required: true });
+      const screenshotsPath = core.getInput('screenshots-path', { required: true });
+      const projectToken = core.getInput('project-token', { required: true });
       let command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/\${{ github.event.pull_request.head.sha }}; done`;
       
       console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff`)
       console.log(command);
-      exec.exec(`sh -c \\${command}`)
+      exec.exec(`sh -c \\${command}`);
     } catch (error) {
-      core.setFailed(error.message)
+      console.log("Failed to send LayoutDiff images");
+      console.log(error);
+      core.setFailed(error.message);
     }
 
     // finally kill the emulator

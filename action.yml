@@ -41,6 +41,12 @@ inputs:
   script:
     description: 'custom script to run - e.g. `./gradlew connectedCheck`'
     required: true
+  screenshots-path:
+    description: 'path to screenshots taked from integration tests'
+    required: true
+  project-token:
+    description: 'LayoutDiff project token'
+    required: true
 runs:
   using: 'node12'
   main: 'lib/main.js'
