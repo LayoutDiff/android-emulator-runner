@@ -121,7 +121,7 @@ async function run() {
     try {
       const screenshotsPath = core.getInput('screenshotsPath', { required: true });
       const projectToken = core.getInput('projectToken', { required: true });
-      exec.exec(`for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/$1; done`)
+      exec.exec(`for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/\${{ github.event.pull_request.head.sha }}; done`)
     } catch (error) {
       core.setFailed(error.message)
     }
