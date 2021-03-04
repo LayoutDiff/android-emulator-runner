@@ -126,7 +126,7 @@ async function run() {
       const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}; done`;
       console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff (commit: ${commitSha})`);
       console.log(command);
-      exec.exec(`sh -c \\${command}`);
+      exec.exec(`sh -c \\"${command}"`);
     } catch (error) {
       console.log(`'Failed·to·send·LayoutDiff·images'`);
       console.log(error);
