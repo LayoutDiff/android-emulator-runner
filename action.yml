@@ -47,6 +47,9 @@ inputs:
   project-token:
     description: 'LayoutDiff project token'
     required: true
+  ref:
+    description: 'The commit SHA to analyze on LayoutDiff'
+    required: true
 runs:
   using: 'node12'
   main: 'lib/main.js'

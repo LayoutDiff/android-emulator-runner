@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as github from '@actions/github';
 import { installAndroidSdk } from './sdk-installer';
 import { checkApiLevel, checkTarget, checkArch, checkDisableAnimations, checkEmulatorBuild } from './input-validator';
 import { launchEmulator, killEmulator } from './emulator-manager';
@@ -121,8 +122,9 @@ async function run() {
     try {
       const screenshotsPath = core.getInput('screenshots-path', { required: true });
       const projectToken = core.getInput('project-token', { required: true });
-      const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/\${{ github.event.pull_request.head.sha }}; done`;
-      console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff`);
+      const commitSha = core.getInput('ref', { required: true });
+      const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}; done`;
+      console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff (commit: ${commitSha})`);
       console.log(command);
       exec.exec(`sh -c \\${command}`);
     } catch (error) {
