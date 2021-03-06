@@ -5,6 +5,8 @@ import { checkApiLevel, checkTarget, checkArch, checkDisableAnimations, checkEmu
 import { launchEmulator, killEmulator } from './emulator-manager';
 import * as exec from '@actions/exec';
 import { parseScript } from './script-parser';
+import * as request from 'request';
+import * as fs from 'fs';
 
 async function run() {
   try {
@@ -123,10 +125,24 @@ async function run() {
       const screenshotsPath = core.getInput('screenshots-path', { required: true });
       const projectToken = core.getInput('project-token', { required: true });
       const commitSha = core.getInput('ref', { required: true });
-      const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}; done`;
+      //const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}; done`;
       console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff (commit: ${commitSha})`);
-      console.log(command);
-      exec.exec(`sh -c \\"${command}"`);
+      
+      fs.readdir("screenshotsPath", (err, files) => {
+        files.forEach(file => {
+          console.log(`Sending file: ${file}`);
+          const req = request.post(`https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}`, (err, resp, body) => {
+            if (err) {
+              console.log('Error!');
+            } else {
+              console.log('URL: ' + body);
+            }
+          });
+          var form = req.form();
+          form.append('image', fs.createReadStream(file));
+        });
+      });
+
     } catch (error) {
       console.log(`'Failed·to·send·LayoutDiff·images'`);
       console.log(error);
