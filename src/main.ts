@@ -128,18 +128,19 @@ async function run() {
       //const command = `for filename in ${screenshotsPath}/*; do curl -X POST -F "image=@$filename" https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}; done`;
       console.log(`Sending screenshots from ${screenshotsPath} to LayoutDiff (commit: ${commitSha})`);
       
-      fs.readdir("screenshotsPath", (err, files) => {
+      fs.readdir(screenshotsPath, (err, files) => {
         files.forEach(file => {
           console.log(`Sending file: ${file}`);
           const req = request.post(`https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}`, (err, resp, body) => {
             if (err) {
               console.log('Error!');
+              console.log(err);
             } else {
               console.log('URL: ' + body);
             }
           });
           var form = req.form();
-          form.append('image', fs.createReadStream(file));
+          form.append('image', fs.createReadStream(`${screenshotsPath}${file}`));
         });
       });
 
