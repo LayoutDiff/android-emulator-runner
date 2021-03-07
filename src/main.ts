@@ -131,7 +131,7 @@ async function run() {
       fs.readdir(screenshotsPath, (err, files) => {
         files.forEach(file => {
           console.log(`Sending file: ${file}`);
-          const req = request.post(`https://app.layoutdiff.com/images/upload/${projectToken}}/${commitSha}`, (err, resp, body) => {
+          const req = request.post(`https://app.layoutdiff.com/images/upload/${projectToken}/${commitSha}`, (err, resp, body) => {
             if (err) {
               console.log('Error!');
               console.log(err);
